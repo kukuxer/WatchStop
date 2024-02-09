@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 import static javax.swing.text.StyleConstants.setIcon;
 
@@ -17,20 +18,22 @@ public class WatchButtons extends JPanel {
     String formattedTime;
     JButton startStopButton;
     JButton noteButton;
-    JButton randomColor;
+    JButton randomColorButton;
     JTextField textField;
     Timer timer;
     NotedTime notedTime;
     Icon pauseButton;
     Icon startButton;
-
+    WatchStopFrame watchStopFrame;
+    Color randomColor;
 
     public String getFormattedTime() {
         return formattedTime;
     }
 
-    public WatchButtons(JTextField textField, Color color, NotedTime notedTime) {
-
+    public WatchButtons(JTextField textField, Color color, NotedTime notedTime, WatchStopFrame watchStopFrame) {
+        randomColor = color;
+        this.watchStopFrame = watchStopFrame;
         this.textField = textField;
         startStopButton = new JButton();
         startStopButton.setBackground(color);
@@ -45,8 +48,8 @@ public class WatchButtons extends JPanel {
         startStopButton.setBorderPainted(false);
         startStopButton.setContentAreaFilled(false);
         startStopButton.setFocusPainted(false);
-        startStopButton.setPreferredSize(new Dimension(150, 50));
-        //startStopButton.setBackground(Color.CYAN);
+        startStopButton.setPreferredSize(new Dimension(150, 15));
+
 
         noteButton = new JButton();
         noteButton.setBackground(color);
@@ -68,16 +71,43 @@ public class WatchButtons extends JPanel {
         noteButton.setContentAreaFilled(false);
         noteButton.setFocusPainted(false);
         noteButton.setPreferredSize(new Dimension(200, 30));
-        // noteButton.setBackground(Color.RED);
         this.notedTime = notedTime;
+
+
+        randomColorButton = new JButton();
+        randomColorButton.setBackground(color);
+
+        ImageIcon originalIcon4 = new ImageIcon("radio-button.png");
+        Image image4 = originalIcon4.getImage();
+        Image smallerIcon4 = image4.getScaledInstance(145, 145, Image.SCALE_SMOOTH);
+        ImageIcon resultImage4 = new ImageIcon(smallerIcon4);
+        randomColorButton.setIcon(resultImage4);
+
+        randomColorButton.setBorderPainted(false);
+        randomColorButton.setContentAreaFilled(false);
+        randomColorButton.setFocusPainted(false);
+        randomColorButton.setPreferredSize(new Dimension(150, 50));
+        randomColorButton.setText("RANDOM COLOR");
+        randomColorButton.setForeground(randomColor.darker().darker().darker().darker());
+        randomColorButton.setHorizontalAlignment(SwingConstants.CENTER);
+        randomColorButton.setVerticalAlignment(SwingConstants.CENTER);
+        randomColorButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        randomColorButton.setVerticalTextPosition(SwingConstants.CENTER);
+        randomColorButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                changeInterfaceColor();
+                System.out.println("Random color");
+            }
+        });
 
         noteButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                AddedTime addedTime = new AddedTime(WatchButtons.this);
-                addedTime.setBackground(color.brighter());
+                AddedTime addedTime = new AddedTime(WatchButtons.this, randomColor);
+                addedTime.setBackground(randomColor);
                 notedTime.add(addedTime);
-                addedTime.notedTime.setBackground(color.brighter().brighter());
+                addedTime.notedTime.setBackground(randomColor.brighter().brighter());
                 notedTime.updateIndex();
                 revalidate();
             }
@@ -99,6 +129,7 @@ public class WatchButtons extends JPanel {
             }
         });
         setLayout(new BorderLayout());
+        add(randomColorButton, BorderLayout.CENTER);
         add(noteButton, BorderLayout.WEST);
         add(startStopButton, BorderLayout.EAST);
     }
@@ -127,5 +158,22 @@ public class WatchButtons extends JPanel {
         active = false;
         //startStopButton.setText("start");
     }
+
+    private void changeInterfaceColor() {
+        Random random = new Random();
+        int red = random.nextInt(256);
+        int green = random.nextInt(256);
+        int blue = random.nextInt(256);
+
+        randomColor = new Color(red, green, blue);
+        watchStopFrame.changeBackgroundColor(randomColor);
+
+        for (Component component : notedTime.getComponents()) {
+            if (component instanceof AddedTime) {
+                ((AddedTime) component).changeBackgroundColor(randomColor);
+            }
+        }
+    }
+
 }
 

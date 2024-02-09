@@ -8,7 +8,7 @@ public class AddedTime extends JPanel {
     public JTextField notedTime;
     WatchButtons watchButtons;
 
-    public AddedTime(WatchButtons watchButtons){
+    public AddedTime(WatchButtons watchButtons,Color color){
         setPreferredSize(new Dimension(40, 20));
         setLayout(new BorderLayout());
         index = new JLabel("");
@@ -17,15 +17,22 @@ public class AddedTime extends JPanel {
         add(index, BorderLayout.WEST);
         notedTime = new JTextField(watchButtons.getFormattedTime());
         notedTime.setBorder(BorderFactory.createEmptyBorder());
-      //  notedTime.setBackground();
+        notedTime.setBackground(color);
 
         add(notedTime, BorderLayout.CENTER);
     }
     public void changeIndex(int number) {
-        index.setText(number + "");
+        index.setText(number + ".");
         validate();
     }
-
+    public void changeBackgroundColor(Color newColor) {
+        setBackground(newColor.darker().darker());
+        notedTime.setBackground(newColor);
+        index.setBackground(newColor.brighter().brighter());
+        // If you have other components that need their color changed, update them here.
+        // For example: notedTime.setBackground(newColor.darker());
+        repaint();
+    }
 
 
 }

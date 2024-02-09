@@ -5,47 +5,12 @@ import org.kukuxer.WatchButtons;
 import javax.swing.*;
 import java.awt.*;
 
-//package org.kukuxer;
-//
-//import javax.swing.*;
-//import java.awt.*;
-//
-//public class WatchStop extends JFrame {
-//    private Color color;
-//    private JTextField textField;
-//    JButton button;
-//
-//    public WatchStop(Color color) {
-//        setTitle("Sheniamer");
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setLayout(new BorderLayout());
-//        getContentPane().setBackground(color);
-//
-//        textField = new JTextField("0.00");
-//        textField.setEditable(false);
-//        textField.setBackground(color.darker());
-//
-//        // Set a different foreground color for the text field
-//        textField.setForeground(color);
-//
-//        textField.setBorder(BorderFactory.createLineBorder(color));
-//        textField.setFont(new Font("Arial", Font.PLAIN, 48));
-//        textField.setPreferredSize(new Dimension(400, 100));
-//        add(textField, BorderLayout.NORTH);
-//
-//        WatchStopButton button = new WatchStopButton(textField, color);
-//        add(button, BorderLayout.CENTER);
-//
-//        pack();
-//        setLocationRelativeTo(null);
-//        setVisible(true);
-//    }
-//}
 public class WatchStopFrame extends JFrame {
     private Color color;
     private JTextField timeshow;
     //private JButton button;
     private NotedTime notedTime;
+    GradientPanel gradientPanel;
 
     public WatchStopFrame(Color color) {
         setTitle("Sheniamer");
@@ -57,7 +22,7 @@ public class WatchStopFrame extends JFrame {
         GradientPanel gradientPanel = new GradientPanel(color, color.darker(), 0, 0.5);
         gradientPanel.setLayout(new BorderLayout());
         timeshow = new JTextField("0.00");
-        timeshow.setEditable(false);
+        timeshow.setEditable(true);
         timeshow.setOpaque(false);
         timeshow.setForeground(color.brighter().brighter().brighter());
         timeshow.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // Add padding
@@ -68,7 +33,7 @@ public class WatchStopFrame extends JFrame {
         notedTime = new NotedTime();
         notedTime.setBackground(color.darker());
         add(notedTime,BorderLayout.WEST);
-        WatchButtons watchButton = new WatchButtons(timeshow, color,notedTime);
+        WatchButtons watchButton = new WatchButtons(timeshow, color,notedTime,WatchStopFrame.this);
         gradientPanel.add(watchButton, BorderLayout.CENTER);
         add(gradientPanel, BorderLayout.CENTER);
 
@@ -77,11 +42,23 @@ public class WatchStopFrame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+    public void changeBackgroundColor(Color newColor) {
+        getContentPane().setBackground(newColor);
+        timeshow.setForeground(newColor.brighter().brighter().brighter());
+        notedTime.setBackground(newColor.darker());
+       notedTime.repaint();
+        // If you have other components that need their color changed, update them here.
+        // For example: notedTime.setBackground(newColor.darker());
+        gradientPanel.setStartColor(newColor);
+        gradientPanel.setEndColor(newColor.darker());
+        gradientPanel.repaint();
+        repaint();
+    }
 
     // Custom JPanel for gradient background
-    private static class GradientPanel extends JPanel {
-        private final Color startColor;
-        private final Color endColor;
+    private  class GradientPanel extends JPanel {
+        private Color startColor;
+        private  Color endColor;
         private final double startFraction;
         private final double endFraction;
 
@@ -90,6 +67,13 @@ public class WatchStopFrame extends JFrame {
             this.endColor = endColor;
             this.startFraction = startFraction;
             this.endFraction = endFraction;
+            gradientPanel = GradientPanel.this;
+        }
+        public  void setStartColor(Color color){
+            startColor = color;
+        }
+        public  void setEndColor(Color color){
+            endColor = color;
         }
 
         @Override
@@ -109,5 +93,6 @@ public class WatchStopFrame extends JFrame {
 
             g2d.dispose();
         }
+
+        }
     }
-}
