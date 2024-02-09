@@ -11,6 +11,11 @@ target/
 *.iws
 *.iml
 *.ipr
+# Ignore image files
+*.png
+*.jpg
+*.jpeg
+
 
 ### Eclipse ###
 .apt_generated
