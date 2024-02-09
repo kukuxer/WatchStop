@@ -1,6 +1,6 @@
 package org.kukuxer;
 
-import org.kukuxer.WatchStopButton;
+import org.kukuxer.WatchButtons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,13 +41,13 @@ import java.awt.*;
 //        setVisible(true);
 //    }
 //}
-public class WatchStop extends JFrame {
+public class WatchStopFrame extends JFrame {
     private Color color;
     private JTextField timeshow;
+    //private JButton button;
+    private NotedTime notedTime;
 
-    private JButton button;
-
-    public WatchStop(Color color) {
+    public WatchStopFrame(Color color) {
         setTitle("Sheniamer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -59,19 +59,18 @@ public class WatchStop extends JFrame {
         timeshow = new JTextField("0.00");
         timeshow.setEditable(false);
         timeshow.setOpaque(false);
-        if(color.equals(Color.black)){
-            timeshow.setForeground(Color.white);
-        }else timeshow.setForeground(color.darker().darker().darker());
+        timeshow.setForeground(color.brighter().brighter().brighter());
         timeshow.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // Add padding
         timeshow.setFont(new Font("Arial", Font.PLAIN, 111));
         timeshow.setHorizontalAlignment(SwingConstants.CENTER);
         gradientPanel.add(timeshow, BorderLayout.NORTH);
         timeshow.setPreferredSize(new Dimension(500, 250));
-        WatchStopButton watchStopButton = new WatchStopButton(timeshow, color);
-        gradientPanel.add(watchStopButton, BorderLayout.CENTER);
+        notedTime = new NotedTime();
+        notedTime.setBackground(color.darker());
+        add(notedTime,BorderLayout.WEST);
+        WatchButtons watchButton = new WatchButtons(timeshow, color,notedTime);
+        gradientPanel.add(watchButton, BorderLayout.CENTER);
         add(gradientPanel, BorderLayout.CENTER);
-
-
 
 
         pack();
